@@ -17,4 +17,17 @@ public class NguoiDung extends AuditEntity {
     private String hoTen;
     @Column(length = 20)
     private String soDienThoai;
+    
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    public void setMatKhau(String matKhau) {
+        this.matKhau = matKhau;
+    }
+    public void setHoTen(String hoTen) {
+        this.hoTen = hoTen;
+    }
+    public void setSoDienThoai(String soDienThoai) {
+        this.soDienThoai = soDienThoai;
+    }
 }
