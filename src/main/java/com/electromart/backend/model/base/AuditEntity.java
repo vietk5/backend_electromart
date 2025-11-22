@@ -19,4 +19,5 @@ public abstract class AuditEntity {
 
     @UpdateTimestamp
     private Instant updatedAt;
+
 }
