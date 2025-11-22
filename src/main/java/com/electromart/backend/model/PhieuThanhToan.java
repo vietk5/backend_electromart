@@ -22,5 +22,5 @@ public class PhieuThanhToan extends AuditEntity {
     private BigDecimal soTien;
 
     @Column(length = 50)
-    private String trangThai; // SUCCESS/PENDING/FAILED...
+    private String trangThai;
 }
