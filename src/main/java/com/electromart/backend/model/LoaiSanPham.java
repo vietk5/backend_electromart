@@ -1,4 +1,4 @@
-// LoaiSanPham.java
+// src/main/java/com/electromart/backend/model/LoaiSanPham.java
 package com.electromart.backend.model;
 
 import com.electromart.backend.model.base.AuditEntity;
