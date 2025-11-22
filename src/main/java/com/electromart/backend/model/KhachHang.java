@@ -1,12 +1,21 @@
-// KhachHang.java
 package com.electromart.backend.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.*;
+import jakarta.persistence.*;
+        import lombok.*;
 
-@Getter @Setter @AllArgsConstructor
-@Entity @Table(name = "khach_hang")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "khach_hang")
 public class KhachHang extends NguoiDung {
-    // có thể thêm field riêng cho KH nếu cần
+
+    // cột để block / unblock tài khoản
+    @Column(name = "bi_khoa", nullable = false)
+    private Boolean biKhoa = false;
+
+    public Boolean getBiKhoa() {
+        return biKhoa != null ? biKhoa : false;
+    }
 }
