@@ -18,7 +18,7 @@ import lombok.Setter;
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor
 @Entity @Table(name = "gio_hang")
 public class GioHang extends AuditEntity {
-    
+
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "khach_hang_id")
     private KhachHang khachHang;

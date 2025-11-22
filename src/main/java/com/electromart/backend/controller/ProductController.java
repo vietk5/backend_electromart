@@ -1,18 +1,23 @@
-// src/main/java/com/electromart/backend/controller/ProductController.java
 package com.electromart.backend.controller;
 
+import com.electromart.backend.model.SanPham;
 import com.electromart.backend.repository.SanPhamRepository;
+import com.electromart.backend.dto.ProductDto;  // Import the ProductDto from the dto package
+import com.electromart.backend.mapper.ProductMapper;
+import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
     private final SanPhamRepository repo;
-    public ProductController(SanPhamRepository repo) { this.repo = repo; }
 
-    public record ProductDto(Long id, String name, String brand, java.math.BigDecimal price, String imageUrl) {}
+    public ProductController(SanPhamRepository repo) {
+        this.repo = repo;
+    }
 
     @GetMapping
     public List<ProductDto> products() {
@@ -21,9 +26,19 @@ public class ProductController {
                         sp.getId(),
                         sp.getTen(),
                         sp.getThuongHieu() != null ? sp.getThuongHieu().getTen() : null,
+                        sp.getLoai() != null ? sp.getLoai().getTen() : null,
                         sp.getGia(),
                         sp.getImageUrl()
                 ))
-                .toList();
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping("/category/{categoryId}")
+    @Transactional
+    public List<ProductDto> getProductsByCategory(@PathVariable Long categoryId) {
+        List<SanPham> products = repo.findByLoaiId(categoryId);
+        return products.stream()
+                .map(ProductMapper::toDto)
+                .collect(Collectors.toList());
     }
 }

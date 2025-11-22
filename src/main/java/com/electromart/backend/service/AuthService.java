@@ -17,7 +17,7 @@ import java.util.Random;
 public class AuthService {
 
     private final NguoiDungRepository repo;
-    
+
     private final EmailService emailService;
 
     public KhachHang register(RegisterRequestDto req) {
@@ -45,7 +45,7 @@ public class AuthService {
 
         return user;
     }
-    
+
     public void sendForgotPasswordEmail(String email) {
         KhachHang user = (KhachHang) repo.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Email không tồn tại"));
