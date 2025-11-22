@@ -1,34 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.electromart.backend.controller;
 
-import com.electromart.backend.repository.BrandRepository;
-import java.util.List;
+import com.electromart.backend.dto.admin.BrandDto;
+import com.electromart.backend.model.ThuongHieu;
+import com.electromart.backend.repository.ThuongHieuRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- *
- * @author duytu
- */
-@RestController
-@RequestMapping("/api/brands")
-public class BrandController {
-    private final BrandRepository repo;
+import java.util.List;
+import java.util.stream.Collectors;
 
-    public BrandController(BrandRepository repo) {
-        this.repo = repo;
-    }
-    
-    public record BrandDto(Long id, String name) {}
-    
+@RestController
+@RequestMapping("/api/brands") // Đường dẫn khớp với Android @GET("api/brands")
+@CrossOrigin(origins = "*")      // Cho phép gọi từ mọi nguồn
+public class BrandController {
+
+    @Autowired
+    private ThuongHieuRepository thuongHieuRepository;
+
     @GetMapping
-    public List<BrandDto> all() {
-        return repo.findAll().stream()
-                .map(l -> new BrandDto(l.getId(), l.getTen()))
-                .toList();
+    public ResponseEntity<List<BrandDto>> getAllBrands() {
+        // 1. Lấy tất cả entity từ DB
+        List<ThuongHieu> list = thuongHieuRepository.findAll();
+
+        // 2. Chuyển đổi Entity sang DTO (chỉ lấy id và tên)
+        List<BrandDto> dtoList = list.stream()
+                .map(th -> new BrandDto(th.getId(), th.getTen()))
+                .collect(Collectors.toList());
+
+        // 3. Trả về cho Android
+        return ResponseEntity.ok(dtoList);
     }
 }
