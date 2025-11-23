@@ -9,5 +9,6 @@ public record ProductDto(
         String brand,
         String category,
         BigDecimal price,
-        String imageUrl
+        String imageUrl,
+        String moTaNgan
 ) {}

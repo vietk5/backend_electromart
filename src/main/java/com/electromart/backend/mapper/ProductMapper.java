@@ -14,7 +14,8 @@ public class ProductMapper {
                 e.getThuongHieu() != null ? e.getThuongHieu().getTen() : null,
                 e.getLoai() != null ? e.getLoai().getTen() : null,
                 e.getGia(),
-                e.getImageUrl()
+                e.getImageUrl(),
+                e.getMoTaNgan()
         );
     }
 

@@ -28,7 +28,8 @@ public class ProductController {
                         sp.getThuongHieu() != null ? sp.getThuongHieu().getTen() : null,
                         sp.getLoai() != null ? sp.getLoai().getTen() : null,
                         sp.getGia(),
-                        sp.getImageUrl()
+                        sp.getImageUrl(),
+                        sp.getMoTaNgan()
                 ))
                 .collect(Collectors.toList());
     }
@@ -41,4 +42,31 @@ public class ProductController {
                 .map(ProductMapper::toDto)
                 .collect(Collectors.toList());
     }
+    // lấy sản phẩm theo id để hiển thị trên chi tiết sản phẩm
+    @GetMapping("/{id}")
+    @Transactional
+    public ProductDto getProductById(@PathVariable Long id) {
+        SanPham sp = repo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm với id = " + id));
+
+        return ProductMapper.toDto(sp);
+    }
+    // lấy các sản phảm có liên quan đến sản phẩm trong chi tiết sản phẩm đó
+   @GetMapping("/{id}/related")
+    public List<ProductDto> getRelated(@PathVariable Long id) {
+
+        // Load product FULL để không bị Lazy
+        SanPham sp = repo.findByIdFull(id).orElseThrow();
+
+        List<SanPham> list =
+                repo.findByLoaiId(sp.getLoai().getId());
+
+        return list.stream()
+                .filter(p -> !p.getId().equals(id))
+                .map(ProductMapper::toDto)
+                .limit(10)
+                .toList();
+    }
+
+
 }
