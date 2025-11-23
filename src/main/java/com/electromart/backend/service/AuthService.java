@@ -71,7 +71,7 @@ public class AuthService {
         if (!user.getOtp().equals(otp)) {
             throw new OTPExpiredException("Invalid OTP");
         }
-
+        
     }
     public void resetPassword(ResetPasswordRequest request) {
         KhachHang user = (KhachHang) repo.findByEmail(request.getEmail())

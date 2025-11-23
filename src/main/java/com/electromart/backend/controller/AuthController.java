@@ -6,7 +6,6 @@ import com.electromart.backend.repository.NguoiDungRepository;
 import com.electromart.backend.service.AuthService;
 import com.electromart.backend.service.EmailService;
 import com.electromart.backend.exception.OTPExpiredException;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,11 @@ public class AuthController {
     public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequestDto req) {
     try {
         // Gọi method đăng ký trên AuthService với DTO
-        KhachHang kh = authService.register(req);
-        return ResponseEntity.ok(new ApiResponse<>(true, "Đăng ký thành công!", kh));
+        KhachHang kh = authService.register(req); 
+        // Gửi email xác nhận đăng ký
+        emailService.sendRegisterEmail(kh);
+        
+        return ResponseEntity.ok(new ApiResponse<>(true, "Đăng ký thành công! Email xác nhận đã gửi.", kh));
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ApiResponse<>(false, e.getMessage(), null));
