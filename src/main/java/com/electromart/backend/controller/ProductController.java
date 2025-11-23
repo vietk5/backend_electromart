@@ -1,6 +1,8 @@
 package com.electromart.backend.controller;
 
+import com.electromart.backend.dto.RatingSummary;
 import com.electromart.backend.model.SanPham;
+import com.electromart.backend.repository.CommentRepository;
 import com.electromart.backend.repository.SanPhamRepository;
 import com.electromart.backend.dto.ProductDto;  // Import the ProductDto from the dto package
 import com.electromart.backend.mapper.ProductMapper;
@@ -14,9 +16,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/products")
 public class ProductController {
     private final SanPhamRepository repo;
+    private final CommentRepository commentRepo;
 
-    public ProductController(SanPhamRepository repo) {
+    public ProductController(SanPhamRepository repo, CommentRepository commentRepo) {
         this.repo = repo;
+        this.commentRepo = commentRepo;
     }
 
     @GetMapping
@@ -66,6 +70,19 @@ public class ProductController {
                 .map(ProductMapper::toDto)
                 .limit(10)
                 .toList();
+    }
+    @GetMapping("/{id}/rating-summary")
+    public RatingSummary getRatingSummary(@PathVariable Long id) {
+        Double avgObj = commentRepo.averageRating(id);
+        double avg = avgObj != null ? avgObj : 0.0;
+
+        int c1 = commentRepo.countRating(id, 1);
+        int c2 = commentRepo.countRating(id, 2);
+        int c3 = commentRepo.countRating(id, 3);
+        int c4 = commentRepo.countRating(id, 4);
+        int c5 = commentRepo.countRating(id, 5);
+
+        return new RatingSummary(avg, c1, c2, c3, c4, c5);
     }
 
 
