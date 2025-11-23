@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SanPhamRepository extends JpaRepository<SanPham, Long> {
     // Lấy kèm Loại & Thương hiệu để tránh LazyInitializationException
@@ -20,12 +21,29 @@ public interface SanPhamRepository extends JpaRepository<SanPham, Long> {
     List<SanPham> findAllWithJoins();
 
     // Lấy sản phẩm theo LoaiSanPham (danh mục)
-    @Query("SELECT sp FROM SanPham sp JOIN FETCH sp.thuongHieu WHERE sp.loai.id = :categoryId")
-    List<SanPham> findByLoaiId(@Param("categoryId") Long categoryId);
+    @Query("""
+       SELECT sp
+       FROM SanPham sp
+       JOIN FETCH sp.loai
+       JOIN FETCH sp.thuongHieu
+       WHERE sp.loai.id = :loaiId
+       """)
+    List<SanPham> findByLoaiId(Long loaiId);
+
 
     @Query("SELECT COALESCE(SUM(s.tonKho), 0) FROM SanPham s")
     long sumAllStock();
 
     @Query("SELECT s FROM SanPham s ORDER BY s.tonKho ASC")
     Page<SanPham> findLowStock(Pageable pageable);
+
+    @Query("""
+       SELECT sp 
+       FROM SanPham sp 
+       JOIN FETCH sp.loai 
+       JOIN FETCH sp.thuongHieu
+       WHERE sp.id = :id
+       """)
+    Optional<SanPham> findByIdFull(Long id);
+
 }
