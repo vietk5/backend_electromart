@@ -32,4 +32,12 @@ public class CartController {
         Long orderId = cartService.checkout(request);
         return ResponseEntity.ok(orderId);
     }
+    @DeleteMapping("/{userId}/item/{productId}")
+    public ResponseEntity<Void> removeItem(
+            @PathVariable int userId,
+            @PathVariable Long productId) {
+        cartService.removeItem(userId, productId);
+        return ResponseEntity.noContent().build();
+    }
+
 }

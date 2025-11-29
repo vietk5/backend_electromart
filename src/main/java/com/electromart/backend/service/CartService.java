@@ -4,10 +4,7 @@ import com.electromart.backend.dto.CartAddRequest;
 import com.electromart.backend.dto.CartItemDto;
 import com.electromart.backend.dto.CheckoutRequest;
 import com.electromart.backend.model.*;
-import com.electromart.backend.repository.DonHangRepository;
-import com.electromart.backend.repository.GioHangRepository;
-import com.electromart.backend.repository.KhachHangRepository;
-import com.electromart.backend.repository.SanPhamRepository;
+import com.electromart.backend.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,7 +24,9 @@ public class CartService {
     private final GioHangRepository gioHangRepository;
     private final KhachHangRepository khachHangRepository;
     private final SanPhamRepository sanPhamRepository;
-    private final DonHangRepository donHangRepository;   // ✅ dùng chung repo đơn hàng
+    private final DonHangRepository donHangRepository;
+    private  final GioHangItemRepository gioHangItemRepository;
+
 
     // ====== THÊM SẢN PHẨM VÀO GIỎ ======
     public void addToCart(CartAddRequest req) {
@@ -168,4 +167,13 @@ public class CartService {
         gioHangRepository.save(cart);
         return userId;
     }
+    @Transactional
+    public void removeItem(int userId, Long productId) {
+        // Ví dụ nếu bạn có GioHangItemRepository
+        GioHang cart = gioHangRepository.findByKhachHangId((long) userId)
+                .orElseThrow(() -> new RuntimeException("Giỏ hàng không tồn tại"));
+
+        gioHangItemRepository.deleteByGioHangIdAndSanPhamId(cart.getId(), productId);
+    }
+
 }
