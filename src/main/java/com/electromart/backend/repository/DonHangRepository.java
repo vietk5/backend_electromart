@@ -30,4 +30,7 @@ public interface DonHangRepository extends JpaRepository<DonHang, Long> {
             @Param("from") LocalDateTime from,
             @Param("to")   LocalDateTime to
     );
+    // them de lay don hang
+    List<DonHang> findByKhachHangIdOrderByNgayDatHangDesc(Long khachHangId);
+
 }

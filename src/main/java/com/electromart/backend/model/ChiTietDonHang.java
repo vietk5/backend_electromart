@@ -1,6 +1,5 @@
 package com.electromart.backend.model;
 
-import com.electromart.backend.model.SanPham;
 import com.electromart.backend.model.base.AuditEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,43 +16,28 @@ import java.math.BigDecimal;
 public class ChiTietDonHang extends AuditEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "don_hang_id")
+    @JoinColumn(name = "don_hang_id", nullable = false)
     private DonHang donHang;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "san_pham_id")
+    @JoinColumn(name = "san_pham_id", nullable = false)
     private SanPham sanPham;
 
-    @Column(nullable = false)
+    @Column(name = "so_luong", nullable = false)
     private Integer soLuong;
 
-    @Column(nullable = false, precision = 16, scale = 2)
+    @Column(name = "don_gia", nullable = false, precision = 16, scale = 2)
     private BigDecimal donGia;
 
-    @Column(nullable = false, precision = 16, scale = 2)
+    @Column(name = "thanh_tien", nullable = false, precision = 16, scale = 2)
     private BigDecimal thanhTien;
 
-    public BigDecimal getThanhTien() {
-        return thanhTien;
-    }
-
-    public void setThanhTien(BigDecimal thanhTien) {
-        this.thanhTien = thanhTien;
-    }
-
-    public BigDecimal getDonGia() {
-        return donGia;
-    }
-
-    public void setDonGia(BigDecimal donGia) {
-        this.donGia = donGia;
-    }
-
-    public Integer getSoLuong() {
-        return soLuong;
-    }
-
-    public void setSoLuong(Integer soLuong) {
-        this.soLuong = soLuong;
+    // Tự động tính thành tiền trước khi INSERT / UPDATE
+    @PrePersist
+    @PreUpdate
+    private void calcThanhTien() {
+        if (donGia != null && soLuong != null) {
+            this.thanhTien = donGia.multiply(BigDecimal.valueOf(soLuong));
+        }
     }
 }
