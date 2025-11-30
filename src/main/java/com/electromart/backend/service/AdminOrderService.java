@@ -1,10 +1,12 @@
 package com.electromart.backend.service;
 
 import com.electromart.backend.dto.admin.AdminOrderDto;
+import com.electromart.backend.dto.admin.OrderDetailItemDto; // <-- import DTO item
 import com.electromart.backend.model.ChiTietDonHang;
 import com.electromart.backend.model.DonHang;
 import com.electromart.backend.model.KhachHang;
 import com.electromart.backend.model.TrangThaiDonHang;
+import com.electromart.backend.repository.ChiTietDonHangRepository; // <-- thêm
 import com.electromart.backend.repository.DonHangRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ import java.math.BigDecimal;
 public class AdminOrderService {
 
     private final DonHangRepository donHangRepository;
+    private final ChiTietDonHangRepository chiTietDonHangRepository; // <-- thêm
 
     public Page<AdminOrderDto> getOrders(Pageable pageable) {
         return donHangRepository.findAll(pageable)
@@ -35,6 +39,31 @@ public class AdminOrderService {
         donHangRepository.save(donHang);
     }
 
+    // ====== HÀM MỚI: LẤY DANH SÁCH SẢN PHẨM TRONG ĐƠN ======
+    @Transactional(readOnly = true)
+    public List<OrderDetailItemDto> getOrderItems(Long orderId) {
+        // có thể kiểm tra đơn có tồn tại không, nếu muốn:
+        if (!donHangRepository.existsById(orderId)) {
+            throw new EntityNotFoundException("Không tìm thấy đơn hàng id=" + orderId);
+        }
+
+        List<ChiTietDonHang> list = chiTietDonHangRepository.findByDonHangId(orderId);
+        return list.stream()
+                .map(this::toItemDto)
+                .toList();
+    }
+
+    private OrderDetailItemDto toItemDto(ChiTietDonHang ct) {
+        OrderDetailItemDto dto = new OrderDetailItemDto();
+        dto.setProductName(ct.getSanPham().getTen());
+        dto.setSoLuong(ct.getSoLuong());
+        dto.setDonGia(ct.getDonGia());        // BigDecimal
+        dto.setThanhTien(ct.getThanhTien());  // BigDecimal
+        dto.setImageUrl(ct.getSanPham().getImageUrl());
+        return dto;
+    }
+
+    // ====== DTO ĐƠN TẮT CHO LIST ======
     private AdminOrderDto toDto(DonHang d) {
         // Tính tổng tiền từ list chi tiết
         BigDecimal total = d.getChiTiet().stream()
@@ -45,7 +74,7 @@ public class AdminOrderService {
 
         return AdminOrderDto.builder()
                 .id(d.getId())
-                .customerName(kh != null ? kh.getHoTen() : null) // nếu field khác thì sửa lại
+                .customerName(kh != null ? kh.getHoTen() : null)
                 .totalAmount(total)
                 .status(d.getTrangThai())
                 .ngayDatHang(d.getNgayDatHang())

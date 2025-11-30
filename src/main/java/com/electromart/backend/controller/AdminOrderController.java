@@ -1,6 +1,7 @@
 package com.electromart.backend.controller;
 
 import com.electromart.backend.dto.admin.AdminOrderDto;
+import com.electromart.backend.dto.admin.OrderDetailItemDto;
 import com.electromart.backend.model.TrangThaiDonHang;
 import com.electromart.backend.service.AdminOrderService;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/orders")
@@ -24,7 +27,6 @@ public class AdminOrderController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size
     ) {
-        // sort theo trường ngayDatHang trong DonHang
         PageRequest pageable = PageRequest.of(
                 page,
                 size,
@@ -41,5 +43,11 @@ public class AdminOrderController {
     ) {
         adminOrderService.updateStatus(id, status);
         return ResponseEntity.noContent().build();
+    }
+
+    // NEW: GET /api/admin/orders/{id}/items
+    @GetMapping("/{id}/items")
+    public ResponseEntity<List<OrderDetailItemDto>> getOrderItems(@PathVariable Long id) {
+        return ResponseEntity.ok(adminOrderService.getOrderItems(id));
     }
 }
