@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CheckoutRequest {
-
+    private int isBuyNow;
     private Long userId;
     private String receiverName;
     private String receiverPhone;

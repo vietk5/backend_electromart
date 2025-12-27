@@ -96,6 +96,42 @@ public class CartService {
 
     // ====== CHECKOUT: TẠO ĐƠN HÀNG + XOÁ ITEM TRONG GIỎ ======
     public Long checkout(CheckoutRequest request) {
+        int isBuyNow = request.getIsBuyNow();
+        //MUA HÀNG NGAY
+        if (isBuyNow == 1) {
+            Long userId = request.getUserId();
+            List<Long> productIds = request.getProductIds();
+            if (userId == null) {
+                throw new IllegalArgumentException("userId không được null");
+            }
+            KhachHang kh = khachHangRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Khách hàng không tồn tại"));
+            GioHang cart = gioHangRepository.findByKhachHangId(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("Giỏ hàng không tồn tại"));
+            DonHang order = new DonHang();
+            order.setKhachHang(kh);
+            order.setNgayDatHang(LocalDateTime.now());
+            order.setTrangThai(TrangThaiDonHang.DANG_XU_LY);
+
+            List<ChiTietDonHang> chiTiets = new ArrayList<>();
+
+            for (Long pId : request.getProductIds()) {
+                SanPham sp = sanPhamRepository.findById(pId)
+                        .orElseThrow(() -> new EntityNotFoundException("Sản phẩm ID " + pId + " không tồn tại"));
+
+                ChiTietDonHang ct = new ChiTietDonHang();
+                ct.setDonHang(order);
+                ct.setSanPham(sp);
+                ct.setSoLuong(1); 
+                ct.setDonGia(sp.getGia());
+                chiTiets.add(ct);
+            }
+
+            order.setChiTiet(chiTiets);
+            donHangRepository.save(order);
+            return userId;
+        }   
+        
         Long userId = request.getUserId();
         List<Long> productIds = request.getProductIds();
 
@@ -119,10 +155,9 @@ public class CartService {
                     .filter(i -> productIds.contains(i.getSanPham().getId()))
                     .collect(Collectors.toList());
         }
-
+        
         if (itemsToCheckout.isEmpty()) {
-            // không có gì để tạo đơn
-            return userId;
+           return userId;
         }
 
         // ===== TẠO ĐƠN HÀNG =====
