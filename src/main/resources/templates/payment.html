@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán VNPay</title>
+
+    <!-- Quan trọng cho WebView -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f2f4f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            background: #ffffff;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 14px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            padding: 24px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: #333;
+            font-size: 22px;
+        }
+
+        .amount-box {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .amount-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .amount-value {
+            font-size: 26px;
+            font-weight: bold;
+            color: #e53935;
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 14px;
+            background: #007bff;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-pay:hover {
+            background: #0056b3;
+        }
+
+        .secure-note {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 13px;
+            color: #777;
+        }
+
+        .secure-note span {
+            color: #4caf50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <div class="header">
+        <h2>Thanh toán VNPay</h2>
+    </div>
+
+    <div class="amount-box">
+        <div class="amount-label">Số tiền cần thanh toán</div>
+        <div class="amount-value">
+            <span th:text="${#numbers.formatInteger(total, 0, 'COMMA')}"></span> VND
+        </div>
+    </div>
+
+    <form th:action="@{/api/payment/create-payment}" method="post">
+        <input type="hidden" name="amount" th:value="${total}" />
+        <input type="hidden" name="orderInfo" value="Thanh toán đơn hàng" />
+
+        <button type="submit" class="btn-pay">
+            Thanh toán ngay
+        </button>
+    </form>
+
+    <div class="secure-note">
+        <span>🔒</span> Thanh toán an toàn qua VNPay
+    </div>
+</div>
+
+</body>
+</html>
