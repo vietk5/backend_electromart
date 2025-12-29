@@ -173,4 +173,25 @@ public class VoucherService {
     private BigDecimal safe(BigDecimal v) {
         return v == null ? BigDecimal.ZERO : v.max(BigDecimal.ZERO);
     }
+    @Transactional
+    public void consumeOnCheckout(String code) {
+        if (code == null || code.isBlank()) return;
+
+        Voucher v = repo.findByCodeIgnoreCase(code.trim()).orElse(null);
+        if (v == null) throw new RuntimeException("Voucher không tồn tại");
+        if (!v.isHoatDong()) throw new RuntimeException("Voucher đang tắt");
+
+        Instant now = Instant.now();
+        if (v.getHieuLucTu() != null && now.isBefore(v.getHieuLucTu()))
+            throw new RuntimeException("Voucher chưa đến ngày hiệu lực");
+        if (v.getHieuLucDen() != null && now.isAfter(v.getHieuLucDen()))
+            throw new RuntimeException("Voucher đã hết hạn");
+
+        int used = v.getSoLuongDaDung() == null ? 0 : v.getSoLuongDaDung();
+        if (v.getSoLuongPhatHanh() != null && used >= v.getSoLuongPhatHanh())
+            throw new RuntimeException("Voucher đã hết lượt sử dụng");
+
+        v.setSoLuongDaDung(used + 1);
+        repo.save(v);
+    }
 }

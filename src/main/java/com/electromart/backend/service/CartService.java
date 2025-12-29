@@ -26,6 +26,7 @@ public class CartService {
     private final SanPhamRepository sanPhamRepository;
     private final DonHangRepository donHangRepository;
     private  final GioHangItemRepository gioHangItemRepository;
+    private  final VoucherService  voucherService;
 
 
     // ====== THÊM SẢN PHẨM VÀO GIỎ ======
@@ -129,6 +130,7 @@ public class CartService {
 
             order.setChiTiet(chiTiets);
             donHangRepository.save(order);
+            voucherService.consumeOnCheckout(request.getVoucherCode());
             return userId;
         }   
         
@@ -196,6 +198,7 @@ public class CartService {
 
         // Lưu đơn hàng (cascade sẽ tự lưu chi tiết)
         donHangRepository.save(order);
+        voucherService.consumeOnCheckout(request.getVoucherCode());
 
         // ===== XOÁ CÁC ITEM ĐÃ CHECKOUT KHỎI GIỎ =====
         cart.getItems().removeAll(itemsToCheckout);
