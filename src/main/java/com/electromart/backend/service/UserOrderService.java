@@ -3,6 +3,7 @@ package com.electromart.backend.service;
 import com.electromart.backend.dto.OrderDetailDto;
 import com.electromart.backend.mapper.OrderDetailMapper;
 import com.electromart.backend.model.DonHang;
+import com.electromart.backend.model.TrangThaiDonHang;
 import com.electromart.backend.repository.DonHangRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,18 @@ public class UserOrderService {
         return list.stream()
                 .map(orderDetailMapper::toDto)
                 .toList();
+    }
+    
+    public void cancelOrder(Long orderId) {
+        DonHang order = donHangRepository.findById(orderId)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng"));
+
+        // ❗ Chỉ cho huỷ khi đang xử lý
+        if (order.getTrangThai() != TrangThaiDonHang.DANG_XU_LY) {
+            throw new RuntimeException("Không thể huỷ đơn ở trạng thái hiện tại");
+        }
+
+        order.setTrangThai(TrangThaiDonHang.DA_HUY);
+        donHangRepository.save(order);
     }
 }

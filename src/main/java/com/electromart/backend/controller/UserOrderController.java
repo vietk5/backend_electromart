@@ -25,4 +25,10 @@ public class UserOrderController {
     public ResponseEntity<List<OrderDetailDto>> getOrdersByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(userOrderService.getOrdersByUser(userId));
     }
+    
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
+        userOrderService.cancelOrder(id);
+        return ResponseEntity.noContent().build();
+    }
 }
