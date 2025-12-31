@@ -1,6 +1,7 @@
 package com.electromart.backend.controller;
 
 import com.electromart.backend.dto.OrderDetailDto;
+import com.electromart.backend.dto.admin.OrderDetailItemDto;
 import com.electromart.backend.service.UserOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +31,10 @@ public class UserOrderController {
     public ResponseEntity<Void> cancelOrder(@PathVariable Long id) {
         userOrderService.cancelOrder(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/{id}/items")
+    public ResponseEntity<List<OrderDetailItemDto>> getOrderItems(@PathVariable Long id) {
+        return ResponseEntity.ok(userOrderService.getOrderItems(id));
     }
 }

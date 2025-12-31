@@ -1,9 +1,12 @@
 package com.electromart.backend.service;
 
 import com.electromart.backend.dto.OrderDetailDto;
+import com.electromart.backend.dto.admin.OrderDetailItemDto;
 import com.electromart.backend.mapper.OrderDetailMapper;
+import com.electromart.backend.model.ChiTietDonHang;
 import com.electromart.backend.model.DonHang;
 import com.electromart.backend.model.TrangThaiDonHang;
+import com.electromart.backend.repository.ChiTietDonHangRepository;
 import com.electromart.backend.repository.DonHangRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,7 @@ public class UserOrderService {
 
     private final DonHangRepository donHangRepository;
     private final OrderDetailMapper orderDetailMapper;
+    private final ChiTietDonHangRepository chiTietDonHangRepository;
 
     @Transactional(readOnly = true)
     public OrderDetailDto getOrderDetail(Long orderId) {
@@ -48,5 +52,27 @@ public class UserOrderService {
 
         order.setTrangThai(TrangThaiDonHang.DA_HUY);
         donHangRepository.save(order);
+    }
+    
+    @Transactional(readOnly = true)
+    public List<OrderDetailItemDto> getOrderItems(Long orderId) {
+        // có thể kiểm tra đơn có tồn tại không, nếu muốn:
+        if (!donHangRepository.existsById(orderId)) {
+            throw new EntityNotFoundException("Không tìm thấy đơn hàng id=" + orderId);
+        }
+
+        List<ChiTietDonHang> list = chiTietDonHangRepository.findByDonHangId(orderId);
+        return list.stream()
+                .map(this::toItemDto)
+                .toList();
+    }
+    private OrderDetailItemDto toItemDto(ChiTietDonHang ct) {
+        OrderDetailItemDto dto = new OrderDetailItemDto();
+        dto.setProductName(ct.getSanPham().getTen());
+        dto.setSoLuong(ct.getSoLuong());
+        dto.setDonGia(ct.getDonGia());        // BigDecimal
+        dto.setThanhTien(ct.getThanhTien());  // BigDecimal
+        dto.setImageUrl(ct.getSanPham().getImageUrl());
+        return dto;
     }
 }
