@@ -17,9 +17,12 @@ public class Comment {
 
     private String username;
 
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     private int rating;
+
+    private String imageUrl; 
 
     private LocalDateTime createdAt = LocalDateTime.now();
 }
