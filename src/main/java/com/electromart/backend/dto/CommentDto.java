@@ -8,5 +8,6 @@ public record CommentDto(
         String username,
         String content,
         int rating,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        String imageUrl
 ) {}
