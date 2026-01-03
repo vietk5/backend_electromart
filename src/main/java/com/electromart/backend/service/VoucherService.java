@@ -71,7 +71,6 @@ public class VoucherService {
         return toDto(repo.save(v));
     }
 
-    // ✅ Đây là cái controller của bạn đang bị lệch signature
     @Transactional
     public VoucherDto toggle(Long id, boolean hoatDong) {
         Voucher v = repo.findById(id).orElseThrow(() -> new RuntimeException("Không tìm thấy voucher"));
@@ -84,7 +83,6 @@ public class VoucherService {
         repo.deleteById(id);
     }
 
-    // ✅ Đây là cái VoucherController báo thiếu: service.apply(...)
     public ApplyVoucherResponse apply(ApplyVoucherRequest req) {
         if (req == null || req.code == null || req.code.isBlank()) {
             return new ApplyVoucherResponse(false, "Bạn chưa nhập mã voucher",
