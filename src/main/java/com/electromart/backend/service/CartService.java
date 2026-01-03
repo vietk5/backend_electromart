@@ -2,6 +2,7 @@ package com.electromart.backend.service;
 
 import com.electromart.backend.dto.CartAddRequest;
 import com.electromart.backend.dto.CartItemDto;
+import com.electromart.backend.dto.CheckoutItem;
 import com.electromart.backend.dto.CheckoutRequest;
 import com.electromart.backend.model.*;
 import com.electromart.backend.repository.*;
@@ -13,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,7 +104,7 @@ public class CartService {
         //MUA HÀNG NGAY
         if (isBuyNow == 1) {
             Long userId = request.getUserId();
-            List<Long> productIds = request.getProductIds();
+            List<CheckoutItem> product = request.getProduct();
             if (userId == null) {
                 throw new IllegalArgumentException("userId không được null");
             }
@@ -116,14 +119,14 @@ public class CartService {
 
             List<ChiTietDonHang> chiTiets = new ArrayList<>();
 
-            for (Long pId : request.getProductIds()) {
-                SanPham sp = sanPhamRepository.findById(pId)
-                        .orElseThrow(() -> new EntityNotFoundException("Sản phẩm ID " + pId + " không tồn tại"));
+            for (CheckoutItem pd : product) {
+                SanPham sp = sanPhamRepository.findById(pd.getProductId())
+                        .orElseThrow(() -> new EntityNotFoundException("Sản phẩm ID " + pd.getProductId() + " không tồn tại"));
 
                 ChiTietDonHang ct = new ChiTietDonHang();
                 ct.setDonHang(order);
                 ct.setSanPham(sp);
-                ct.setSoLuong(1); 
+                ct.setSoLuong(pd.getQuantity()); 
                 ct.setDonGia(sp.getGia());
                 chiTiets.add(ct);
             }
@@ -135,7 +138,7 @@ public class CartService {
         }   
         
         Long userId = request.getUserId();
-        List<Long> productIds = request.getProductIds();
+        List<CheckoutItem> product = request.getProduct();
 
         if (userId == null) {
             throw new IllegalArgumentException("userId không được null");
@@ -149,12 +152,17 @@ public class CartService {
 
         // Lấy danh sách item cần checkout
         List<GioHangItem> itemsToCheckout;
-        if (productIds == null || productIds.isEmpty()) {
+        if (product == null || product.isEmpty()) {
             // Nếu không truyền productIds -> checkout toàn bộ giỏ
             itemsToCheckout = new ArrayList<>(cart.getItems());
         } else {
+            // Tạo một tập hợp các ID cần thanh toán để so sánh cho nhanh
+            Set<Long> productIdsToBuy = product.stream()
+                    .map(CheckoutItem::getProductId)
+                    .collect(Collectors.toSet());
+
             itemsToCheckout = cart.getItems().stream()
-                    .filter(i -> productIds.contains(i.getSanPham().getId()))
+                    .filter(i -> productIdsToBuy.contains(i.getSanPham().getId()))
                     .collect(Collectors.toList());
         }
         
@@ -182,13 +190,26 @@ public class CartService {
         // order.setTenNguoiNhan(request.getReceiverName());
         // order.setSoDienThoaiNguoiNhan(request.getReceiverPhone());
         // order.setDiaChiNguoiNhan(request.getReceiverAddress());
+        Map<Long, Integer> quantityMap = product.stream()
+        .collect(Collectors.toMap(
+                CheckoutItem::getProductId,
+                CheckoutItem::getQuantity
+        ));
 
         List<ChiTietDonHang> chiTiets = new ArrayList<>();
         for (GioHangItem i : itemsToCheckout) {
             ChiTietDonHang ct = new ChiTietDonHang();
             ct.setDonHang(order);
             ct.setSanPham(i.getSanPham());
-            ct.setSoLuong(i.getSoLuong());
+            
+//            ct.setSoLuong(i.getSoLuong());
+            int qty = quantityMap.getOrDefault(
+                        i.getSanPham().getId(),
+                        i.getSoLuong()
+                );
+
+                ct.setSoLuong(qty);
+
             ct.setDonGia(i.getDonGia());
             // nếu entity có field thanhTien thì set, còn nếu chỉ có getter tính toán thì bỏ
             // ct.setThanhTien(i.getThanhTien());

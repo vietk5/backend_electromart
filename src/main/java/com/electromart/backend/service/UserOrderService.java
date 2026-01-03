@@ -1,7 +1,7 @@
 package com.electromart.backend.service;
 
 import com.electromart.backend.dto.OrderDetailDto;
-import com.electromart.backend.dto.admin.OrderDetailItemDto;
+import com.electromart.backend.dto.OrderDetailItemDto;
 import com.electromart.backend.mapper.OrderDetailMapper;
 import com.electromart.backend.model.ChiTietDonHang;
 import com.electromart.backend.model.DonHang;
@@ -68,6 +68,7 @@ public class UserOrderService {
     }
     private OrderDetailItemDto toItemDto(ChiTietDonHang ct) {
         OrderDetailItemDto dto = new OrderDetailItemDto();
+        dto.setProductId(ct.getSanPham().getId());
         dto.setProductName(ct.getSanPham().getTen());
         dto.setSoLuong(ct.getSoLuong());
         dto.setDonGia(ct.getDonGia());        // BigDecimal

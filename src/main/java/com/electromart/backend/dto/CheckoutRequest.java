@@ -19,5 +19,5 @@ public class CheckoutRequest {
     private String receiverAddress;
     private String paymentMethod;
     private String voucherCode;
-    private List<Long> productIds;
+    private List<CheckoutItem> product;
 }

@@ -1,7 +1,7 @@
 package com.electromart.backend.controller;
 
 import com.electromart.backend.dto.OrderDetailDto;
-import com.electromart.backend.dto.admin.OrderDetailItemDto;
+import com.electromart.backend.dto.OrderDetailItemDto;
 import com.electromart.backend.service.UserOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
