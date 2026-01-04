@@ -116,6 +116,12 @@ public class CartService {
             order.setKhachHang(kh);
             order.setNgayDatHang(LocalDateTime.now());
             order.setTrangThai(TrangThaiDonHang.DANG_XU_LY);
+            if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
+                order.setPhuongThuc(PhuongThucThanhToan.COD);
+            } else {
+                order.setPhuongThuc(PhuongThucThanhToan.VNPAY);
+            }
+
 
             List<ChiTietDonHang> chiTiets = new ArrayList<>();
 
@@ -175,16 +181,22 @@ public class CartService {
         order.setKhachHang(kh);
         order.setNgayDatHang(LocalDateTime.now());
         order.setTrangThai(TrangThaiDonHang.DANG_XU_LY); // hoặc trạng thái mặc định bạn muốn
+        
+        if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
+            order.setPhuongThuc(PhuongThucThanhToan.COD);
+        } else {
+            order.setPhuongThuc(PhuongThucThanhToan.VNPAY);
+        }
 
         // parse phương thức thanh toán từ request (COD / ONLINE ...)
-        try {
-            order.setPhuongThuc(PhuongThucThanhToan.valueOf(
-                    request.getPaymentMethod().toUpperCase()
-            ));
-        } catch (Exception ex) {
-            // nếu sai thì cho default COD
-            order.setPhuongThuc(PhuongThucThanhToan.COD);
-        }
+//        try {
+//            order.setPhuongThuc(PhuongThucThanhToan.valueOf(
+//                    request.getPaymentMethod().toUpperCase()
+//            ));
+//        } catch (Exception ex) {
+//            // nếu sai thì cho default COD
+//            order.setPhuongThuc(PhuongThucThanhToan.COD);
+//        }
 
         // nếu DonHang có các field người nhận, địa chỉ... thì set thêm ở đây
         // order.setTenNguoiNhan(request.getReceiverName());
