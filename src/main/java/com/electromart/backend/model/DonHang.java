@@ -35,6 +35,15 @@ public class DonHang extends AuditEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "phuong_thuc", length = 20, nullable = false)
     private PhuongThucThanhToan phuongThuc = PhuongThucThanhToan.COD;
+    
+    @Column(name = "ten_nguoi_nhan", nullable = false)
+    private String tenNguoiNhan;
+
+    @Column(name = "so_dien_thoai_nhan", nullable = false, length = 15)
+    private String soDienThoaiNhan;
+
+    @Column(name = "dia_chi_nhan", nullable = false, columnDefinition = "TEXT")
+    private String diaChiNhan;
 
     @OneToMany(mappedBy = "donHang", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChiTietDonHang> chiTiet = new ArrayList<>();

@@ -41,9 +41,10 @@ public class OrderDetailMapper {
         dto.setNgayDatHang(d.getNgayDatHang());
         dto.setTrangThai(d.getTrangThai());
 
-        dto.setCustomerName(kh.getHoTen());
-        dto.setCustomerEmail(kh.getEmail());
-        dto.setCustomerPhone(kh.getSoDienThoai());
+        dto.setTenNguoiNhan(d.getTenNguoiNhan());
+        dto.setSoDienThoaiNhan(d.getSoDienThoaiNhan());
+        dto.setDiaChiNhan(d.getDiaChiNhan());
+
 
         dto.setTongTien(total);
         dto.setPhuongThucThanhToan(d.getPhuongThuc().name());

@@ -116,6 +116,10 @@ public class CartService {
             order.setKhachHang(kh);
             order.setNgayDatHang(LocalDateTime.now());
             order.setTrangThai(TrangThaiDonHang.DANG_XU_LY);
+            order.setTenNguoiNhan(request.getReceiverName());
+            order.setSoDienThoaiNhan(request.getReceiverPhone());
+            order.setDiaChiNhan(request.getReceiverAddress());
+
             if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
                 order.setPhuongThuc(PhuongThucThanhToan.COD);
             } else {
@@ -180,7 +184,11 @@ public class CartService {
         DonHang order = new DonHang();
         order.setKhachHang(kh);
         order.setNgayDatHang(LocalDateTime.now());
-        order.setTrangThai(TrangThaiDonHang.DANG_XU_LY); // hoặc trạng thái mặc định bạn muốn
+        order.setTrangThai(TrangThaiDonHang.DANG_XU_LY);
+        order.setTenNguoiNhan(request.getReceiverName());
+        order.setSoDienThoaiNhan(request.getReceiverPhone());
+        order.setDiaChiNhan(request.getReceiverAddress());
+
         
         if ("COD".equalsIgnoreCase(request.getPaymentMethod())) {
             order.setPhuongThuc(PhuongThucThanhToan.COD);
@@ -188,20 +196,6 @@ public class CartService {
             order.setPhuongThuc(PhuongThucThanhToan.VNPAY);
         }
 
-        // parse phương thức thanh toán từ request (COD / ONLINE ...)
-//        try {
-//            order.setPhuongThuc(PhuongThucThanhToan.valueOf(
-//                    request.getPaymentMethod().toUpperCase()
-//            ));
-//        } catch (Exception ex) {
-//            // nếu sai thì cho default COD
-//            order.setPhuongThuc(PhuongThucThanhToan.COD);
-//        }
-
-        // nếu DonHang có các field người nhận, địa chỉ... thì set thêm ở đây
-        // order.setTenNguoiNhan(request.getReceiverName());
-        // order.setSoDienThoaiNguoiNhan(request.getReceiverPhone());
-        // order.setDiaChiNguoiNhan(request.getReceiverAddress());
         Map<Long, Integer> quantityMap = product.stream()
         .collect(Collectors.toMap(
                 CheckoutItem::getProductId,

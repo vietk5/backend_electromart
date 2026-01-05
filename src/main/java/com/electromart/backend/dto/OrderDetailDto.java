@@ -13,9 +13,9 @@ public class OrderDetailDto {
     private LocalDateTime ngayDatHang;
     private TrangThaiDonHang trangThai;
 
-    private String customerName;
-    private String customerEmail;
-    private String customerPhone;
+    private String tenNguoiNhan;
+    private String soDienThoaiNhan;
+    private String diaChiNhan;
 
     private BigDecimal tongTien;
     private String phuongThucThanhToan;
