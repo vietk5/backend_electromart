@@ -5,7 +5,6 @@ import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -15,13 +14,19 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
     
+    // Gửi email xác thực otp
     @Async
     public void sendOtpEmail(String toEmail, String otp) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(toEmail);
-        message.setSubject("Mã OTP xác thực ElectroMart");
-        message.setText("Mã OTP của bạn là: " + otp + "\nOTP có hiệu lực trong 5 phút.");
-        mailSender.send(message);
+        try {
+        MimeMessage mimeMessage = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, false, "UTF-8");
+        helper.setTo(toEmail);
+        helper.setSubject("Mã OTP xác thực ElectroMart");
+        helper.setText("Mã OTP của bạn là: " + otp + "\nOTP có hiệu lực trong 5 phút.");
+        mailSender.send(mimeMessage);
+    } catch (Exception e) {
+        e.printStackTrace();
+        }
     }
     
     // Gửi email xác nhận đăng ký
