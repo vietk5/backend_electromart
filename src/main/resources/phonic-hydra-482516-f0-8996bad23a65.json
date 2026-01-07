@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "phonic-hydra-482516-f0",
+  "private_key_id": "8996bad23a655cd95a1df2d8f7fd76d26473c7ec",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCeGqGCKIB10blC\nJkwRzPD2gamH1dMDCXwJxS5/eFZSSSvaST0KyXuYoerjwjiIsToj6SaW1qNCKoRy\nLHVPzGhHFgxScfhvAfAL/oW5WRHTZJ+eTKiTWOk+cGrl6XJud4iQ81Xfc4DSlY3V\nGd3jjoHeed4OLtiC+o+CXIZ3U7UFeHYlTlwVYf8U9tvYcGG1q9jFtQNWGtxfYbLq\nn9vAocRFCGvZ59LLhS6gYRF+YYF+Em8HjSDRqbJ1ahNaN+xpOPRm7tAtuhSF3BsP\nKOIB486QMPWlyqFjpR4L7pexsxvh1oaU+nzwaQ5y01XCwfZvKZQm4swXDrVSM5zi\nd75YqVQvAgMBAAECggEASmX+vWiAtrCXjGTIJBI8C8vNMoHwt3ulllVnAY3nlPYg\nwCn5oxNX6WW8SiwRfWVklhR3V8Ct94tZYv6/v2rRYS4jY0KFZPtU8df2JlefF0pB\nAHVTWG8c5whwjTsy4X+3UHppXOqV4sKEiRSQgS4Et+PCFgt+T/hHQtF2Zz2JMAaX\npBTCAt6Qq1jJ7kTr7LxmzafemLYMugwF398UuPXseT6sbYkRmQNWGgOMPLkayzBk\na4PILPGUy7geza2QTC29BaaIII4kcBE3FkqD6EXg+UzTBoNUxs+5nJNz0ihIegoj\n5oMtqA6ZmdXgCG9q1tLTYKc+93dHnT7zJhgAsE0xdQKBgQDP6F7NbgwJ5W1HArh/\nzA00izX6xzHb7dSigvsMvyZ7JeJJfjUXRA+LL2beP1oqBtkFNAYZKSpM6KOXrMi1\nMYefDMTlIDfiJ7k3DVPR3gTrSSoJObq+imDmsH8hLS3ZWOQlbbjjni27gzgquYP9\nrYNYnYsVkw6Jaw8J6klbDz83mwKBgQDCrQvc74IwhbPdVe3ar2oKqKMdsBi1Vb2P\nNmPRqFohvok7CiP1KJADmQIEhpOhD3Fum8N2zZnmYSy/ZAiYIVVjr1PtbRfE5m8Z\n6xDZg0FsXABVfWEUky015dixJaJ2PD1zUrQIEl+ztLXel+d6Cf3XEKPqX+fbaWCc\nvUrXanQg/QKBgB3WDgzTFx0wdI81P77vTJHWzIdRoMEcD2DHBToeEGqp1CCR4RKW\nrNhflBae5tSTKP/LKHjh5HUnCZsRq7f9BKZ5kaQEDKEC7FyPKBE9GF2foU2zoC4J\n88AHYicjsam4TP1mEptvrsZzHVNcTinQhcHo0fXlpbdoyr60hZRwyrSzAoGACz2C\nmdcaZULTB8yWVzIZpVPnVyd7xbyVnVc+nDRkP96Ifegv+0/EQPDstOYwT/RcUE6e\nEpX8dNjXhJV6CY6jJ4ZQCj1qSewkLhLsfiKd/GuzeTwsBswYqCwFPvU1VC5WPfpg\nerbU38NnXNrYeqtpBKnpTPcMpBaJhYNIdvemjOECgYEAxBUfjZgyO9Z3SMxO96nj\nAw2t8/IvRgoFnIH+m17A40O7zDj3StX4Jibfkeqzvwd/PCdj1A+fZ0dvYc/JnJk5\n+iE3TrZtsr99za5U0CU/9+mNf5kM8fGUiQ3V264LzOMP+kdSmqBaDAK4D8lq/4ei\nmgYwpmaztVfHwLU8NZw3w+E=\n-----END PRIVATE KEY-----\n",
+  "client_email": "cloud-vision-android@phonic-hydra-482516-f0.iam.gserviceaccount.com",
+  "client_id": "111133658553365991740",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/cloud-vision-android%40phonic-hydra-482516-f0.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
