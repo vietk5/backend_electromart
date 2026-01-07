@@ -26,7 +26,7 @@ public class SpinService {
     private final VoucherRepository voucherRepo;
 
     private static final int DAILY_LIMIT = 1;
-
+    // kiểm tra hnay user còn lượt quay hay ko
     public SpinStatusResponse status(Long userId) {
         LocalDate today = LocalDate.now();
         long used = historyRepo.countByUserIdAndSpinDate(userId, today);
@@ -44,10 +44,11 @@ public class SpinService {
         LocalDateTime tmr = LocalDate.now().plusDays(1).atStartOfDay();
         return tmr.toString();
     }
-
+    // thực hiện quay thưởng
     @Transactional
     public SpinResultResponse spin(Long userId) {
         LocalDate today = LocalDate.now();
+        // chặn 1 lần/ngày
         if (historyRepo.countByUserIdAndSpinDate(userId, today) >= DAILY_LIMIT) {
             return SpinResultResponse.builder()
                     .success(false)
@@ -57,7 +58,7 @@ public class SpinService {
                     .message("Hôm nay bạn đã quay rồi, quay lại ngày mai nhé.")
                     .build();
         }
-
+        // lấy danh sách voucher đang được active
         List<SpinReward> pool = new ArrayList<>(rewardRepo.findByActiveTrue());
         if (pool.isEmpty()) {
             return SpinResultResponse.builder()
@@ -70,7 +71,6 @@ public class SpinService {
         }
 
         SpinReward chosen = null;
-
         // reroll tối đa 10 lần nếu trúng voucher nhưng voucher không hợp lệ/hết lượt
         for (int attempt = 0; attempt < 10 && !pool.isEmpty(); attempt++) {
             SpinReward candidate = weightedPick(pool);
@@ -140,8 +140,9 @@ public class SpinService {
         int total = 0;
         for (SpinReward r : items) total += Math.max(0, r.getWeight());
         if (total <= 0) return items.get(new Random().nextInt(items.size()));
-
+        // QUAY
         int roll = new Random().nextInt(total);
+
         int cur = 0;
         for (SpinReward r : items) {
             cur += Math.max(0, r.getWeight());

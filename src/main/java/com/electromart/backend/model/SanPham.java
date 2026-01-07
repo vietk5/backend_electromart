@@ -30,7 +30,6 @@ public class SanPham extends AuditEntity {
     @Column(length = 2048)
     private String imageUrl;
 
-    // ✅ THÊM FIELD MỚI: tồn kho hiện tại
     @Column(name = "ton_kho", nullable = false)
     private Integer tonKho = 0;
 }
